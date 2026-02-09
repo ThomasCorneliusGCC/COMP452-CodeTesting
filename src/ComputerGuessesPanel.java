@@ -39,18 +39,15 @@ public class ComputerGuessesPanel extends JPanel {
         prompt.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(Box.createRigidArea(new Dimension(0,10)));
 
+        //refactor to test 'lower' logic
         JButton lowerBtn = new JButton("Lower");
         lowerBtn.addActionListener(e -> {
-            upperBound = Math.min(upperBound, lastGuess);
-
-            lastGuess = (lowerBound + upperBound + 1) / 2;
-            numGuesses += 1;
-            guessMessage.setText("I guess " + lastGuess + ".");
+            guessMessage.setText("I guess " + lowBtnPress() + ".");
         });
         this.add(lowerBtn);
         lowerBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(Box.createRigidArea(new Dimension(0,10)));
-
+        //refactor to add 'equal' logic
         JButton correctBtn = new JButton("Equal");
         correctBtn.addActionListener(e -> {
             guessMessage.setText("I guess ___.");
@@ -65,14 +62,11 @@ public class ComputerGuessesPanel extends JPanel {
         this.add(correctBtn);
         correctBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(Box.createRigidArea(new Dimension(0,10)));
-
+        // refactor to add test for 'higher' button
         JButton higherBtn = new JButton("Higher");
         higherBtn.addActionListener(e -> {
-            lowerBound = Math.max(lowerBound, lastGuess + 1);
 
-            lastGuess = (lowerBound + upperBound + 1) / 2;
-            numGuesses += 1;
-            guessMessage.setText("I guess " + lastGuess + ".");
+            guessMessage.setText("I guess " + highBtnPress() + ".");
         });
         this.add(higherBtn);
         higherBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -90,4 +84,19 @@ public class ComputerGuessesPanel extends JPanel {
         });
     }
 
+    int lowBtnPress(){
+        upperBound = Math.min(upperBound, lastGuess);
+
+        lastGuess = (lowerBound + upperBound + 1) / 2;
+        numGuesses += 1;
+        return lastGuess;
+    }
+
+    int highBtnPress(){
+        lowerBound = Math.max(lowerBound, lastGuess + 1);
+
+        lastGuess = (lowerBound + upperBound + 1) / 2;
+        numGuesses += 1;
+        return lastGuess;
+    }
 }
