@@ -20,6 +20,11 @@ public class ComputerGuessesPanel extends JPanel {
     private int upperBound; // correct number is <= upperBound
     private int lowerBound; // correct number is >= lowerBound
 
+    public ComputerGuessesPanel(){
+        numGuesses = 0;
+        upperBound = 1000;
+        lowerBound = 1;
+    }
     public ComputerGuessesPanel(JPanel cardsPanel, Consumer<GameResult> gameFinishedCallback){
         numGuesses = 0;
         upperBound = 1000;
@@ -74,17 +79,13 @@ public class ComputerGuessesPanel extends JPanel {
 
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent e) {
-                numGuesses = 0;
-                upperBound = 1000;
-                lowerBound = 1;
-
-                lastGuess = (lowerBound + upperBound + 1) / 2;
+                setStartValues();
                 guessMessage.setText("I guess " + lastGuess + ".");
             }
         });
     }
 
-    int lowBtnPress(){
+    public int lowBtnPress(){
         upperBound = Math.min(upperBound, lastGuess);
 
         lastGuess = (lowerBound + upperBound + 1) / 2;
@@ -92,11 +93,20 @@ public class ComputerGuessesPanel extends JPanel {
         return lastGuess;
     }
 
-    int highBtnPress(){
+    public int highBtnPress(){
         lowerBound = Math.max(lowerBound, lastGuess + 1);
 
         lastGuess = (lowerBound + upperBound + 1) / 2;
         numGuesses += 1;
+        return lastGuess;
+    }
+
+    public int setStartValues(){
+        numGuesses = 0;
+        upperBound = 1000;
+        lowerBound = 1;
+
+        lastGuess = (lowerBound + upperBound + 1) / 2;
         return lastGuess;
     }
 }
