@@ -69,26 +69,27 @@ public class GameOverPanel extends JPanel {
      * Sets the game results, updates the UI, and saves results to the log file (if human was playing)
      */
     // TODO: refactor this method
-    public void setGameResults(GameResult result){
+    public void setGameResults(GameResult result, String filename){
         this.gameResult = result;
 
         answerTxt.setText("The answer was " + result.correctValue + ".");
-        if(result.numGuesses == 1){
-            numGuessesTxt.setText((result.humanWasPlaying ? "You" : "I") + " guessed it on the first try!");
-        }
-        else {
-            numGuessesTxt.setText("It took " + (result.humanWasPlaying ? "you" : "me") + " " + result.numGuesses + " guesses.");
-        }
+        numGuessesTxt.setText(getGuessesText(result.numGuesses, result.humanWasPlaying));
 
         // send I/O to another method
         if(result.humanWasPlaying){
-            sendToFile(result);
+            sendToFile(result, filename);
         }
     }
 
-    private void sendToFile(GameResult result){
+    private String getGuessesText(int numGuesses, boolean humanPlaying) {
+        if(numGuesses == 1)
+            return (humanPlaying ? "You" : "I") + " guessed it on the first try!";
+        return "It took " + (humanPlaying ? "you" : "me") + " " + numGuesses + " guesses.";
+    }
+
+    private void sendToFile(GameResult result, String filename){
         // write stats to file
-        try(CSVWriter writer = new CSVWriter(new FileWriter(StatsFile.FILENAME, true))) {
+        try(CSVWriter writer = new CSVWriter(new FileWriter(filename, true))) {
 
             String [] record = new String[2];
             record[0] = LocalDateTime.now().toString();
