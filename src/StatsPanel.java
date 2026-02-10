@@ -48,7 +48,7 @@ public class StatsPanel extends JPanel {
         resultsPanel.setMinimumSize(new Dimension(120, 120));
         this.add(resultsPanel);
         resultsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        updateResultsPanel();
+        updateResultsPanel(new StatsFile());
 
         this.add(Box.createVerticalGlue());
 
@@ -65,12 +65,12 @@ public class StatsPanel extends JPanel {
 
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent e) {
-                updateResultsPanel();
+                updateResultsPanel(new StatsFile());
             }
         });
     }
 
-    private String createBounds(int binIndex){
+    public String createBounds(int binIndex){
         if(binIndex == BIN_EDGES.length-1){
             // last bin
             return BIN_EDGES[binIndex] + " or more";
@@ -86,26 +86,24 @@ public class StatsPanel extends JPanel {
         }
     }
 
-    private void clearResults(){
+    public void clearResults(){
         for(JLabel lbl : resultsLabels){
             lbl.setText("--");
         }
     }
 
     // want to test
-    private void updateResultsPanel(){
+    public void updateResultsPanel(StatsFile stats){
         clearResults();
 
         for(int binIndex=0; binIndex<BIN_EDGES.length; binIndex++){
             JLabel resultLabel = resultsLabels.get(binIndex);
-            resultLabel.setText(Integer.toString(countGames(binIndex)));
+            resultLabel.setText(Integer.toString(countGames(binIndex, stats)));
         }
     }
 
-    private int countGames(int binIndex){
+    public int countGames(int binIndex, StatsFile stats){
         // move stats as argument for testing
-        GameStats stats = new StatsFile();
-
         final int lowerBound = BIN_EDGES[binIndex];
         int numGames = 0;
 
