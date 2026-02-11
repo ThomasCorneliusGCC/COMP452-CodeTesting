@@ -43,6 +43,7 @@ public class GameOverPanel extends JPanel {
 
         JPanel buttonPanel = new JPanel();
 
+
         JButton restart = new JButton("Play Again");
         restart.addActionListener(e -> {
             // See itemStateChanged in https://docs.oracle.com/javase/tutorial/uiswing/examples/layout/CardLayoutDemoProject/src/layout/CardLayoutDemo.java
@@ -64,41 +65,24 @@ public class GameOverPanel extends JPanel {
         this.add(buttonPanel);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
+    //default constructor to avoid swing in tests
+    public GameOverPanel(){
+
+    }
 
     /**
      * Sets the game results, updates the UI, and saves results to the log file (if human was playing)
      */
     // TODO: refactor this method
     public void setGameResults(GameResult result, String filename){
+        StatsFile sf = new StatsFile();
         this.gameResult = result;
 
         answerTxt.setText("The answer was " + result.correctValue + ".");
-        numGuessesTxt.setText(getGuessesText(result.numGuesses, result.humanWasPlaying));
+        numGuessesTxt.setText(result.getGuessesText());
 
         // send I/O to another method
-        if(result.humanWasPlaying){
-            sendToFile(result, filename);
-        }
-    }
 
-    private String getGuessesText(int numGuesses, boolean humanPlaying) {
-        if(numGuesses == 1)
-            return (humanPlaying ? "You" : "I") + " guessed it on the first try!";
-        return "It took " + (humanPlaying ? "you" : "me") + " " + numGuesses + " guesses.";
-    }
-
-    private void sendToFile(GameResult result, String filename){
-        // write stats to file
-        try(CSVWriter writer = new CSVWriter(new FileWriter(filename, true))) {
-
-            String [] record = new String[2];
-            record[0] = LocalDateTime.now().toString();
-            record[1] = Integer.toString(result.numGuesses);
-
-            writer.writeNext(record);
-        } catch (IOException e) {
-            // NOTE: In a full implementation, we would log this error and possibly alert the user
-            // NOTE: For this project, you do not need unit tests for handling this exception.
-        }
+        sf.sendToFile(result, filename);
     }
 }

@@ -1,3 +1,4 @@
+//using dependency injection
 import com.opencsv.CSVReader;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -129,6 +130,29 @@ public class StatsFileTest {
         StatsFile stats = new StatsFile(csvReaderTest);
         assertEquals(Integer.MAX_VALUE, stats.maxNumGuesses());
     }
+
+    @Test
+    void testSendToFile(){
+        MockStatsFile msf = new MockStatsFile();
+        int numGuesses = 5;
+        String filename = "test.csv";
+        GameResult gr = new GameResult(true, 4, numGuesses);
+
+        String results = msf.sendToFile(gr, "test.csv");
+
+        assertEquals(results, filename + " " + numGuesses);
+    }
+
+    @Test
+    void computerGame(){
+        MockStatsFile msf = new MockStatsFile();
+        int numGuesses = 5;
+        GameResult gr = new GameResult(false, 4, numGuesses);
+
+        String results = msf.sendToFile(gr, "test.csv");
+
+        assertEquals(results, "Computer Game");
+    }
 }
 
 class CSVReaderForTest extends CSVReader {
@@ -145,6 +169,18 @@ class CSVReaderForTest extends CSVReader {
     public String[] readNext() throws IOException {
         if (currentRow >= data.length) return null;
         return data[currentRow++];
+    }
+
+}
+
+class MockStatsFile extends StatsFile{
+    @Override
+    public String sendToFile(GameResult result, String filename){
+        if(result.humanWasPlaying) {
+            return filename + " " + result.numGuesses;
+        } else {
+            return "Computer Game";
+        }
     }
 }
 

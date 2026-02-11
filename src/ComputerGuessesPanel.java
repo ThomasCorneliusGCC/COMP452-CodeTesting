@@ -109,4 +109,8 @@ public class ComputerGuessesPanel extends JPanel {
         lastGuess = (lowerBound + upperBound + 1) / 2;
         return lastGuess;
     }
+
+    public int getNumGuesses(){
+        return numGuesses;
+    }
 }
